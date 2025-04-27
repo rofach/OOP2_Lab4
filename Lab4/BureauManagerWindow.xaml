@@ -1,0 +1,30 @@
+﻿<Window x:Class="Lab4.BureauManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab4"
+        mc:Ignorable="d"
+        Title="Бюро послуг" Height="450" Width="800"
+		Closing="Window_Closing">
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+			<Button x:Name="btnSave" Content="Зберегти і закрити" Width="75" Click="btnSave_Click"/>
+			<Button x:Name="btnCancel" Content="Скасувати і закрити" Width="75" Click="btnCancel_Click"/>
+		</StackPanel>
+		<Label Grid.Row="1" Content="Перелік замовлень" VerticalAlignment="Center"/>
+		<ListBox x:Name="lbOrders" Grid.Row="2" DisplayMemberPath="OrderInfo"/>
+		<StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" Margin="0,10,0,0">
+			<Button x:Name="btnAddOrder" Content="Додати" Width="75" Click="btnAddOrder_Click"/>
+			<Button x:Name="btnDeleteOrder" Content="Додати" Width="75" Click="btnDeleteOrder_Click"/>
+			<Button x:Name="btnEditOrder" Content="Редагувати" Width="75" Margin="5,0,0,0" Click="btnEditOrder_Click" IsEnabled="False"/>
+			<Button x:Name="btnDetailedInfo" Content="Детальна інофрмація" Width="75" Margin="5,0,0,0" Click="btnDetailedInfo_Click"/>
+		</StackPanel>
+	</Grid>
+</Window>

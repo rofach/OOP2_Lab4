@@ -1,0 +1,49 @@
+﻿<Window x:Class="Lab4.OrderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab4"
+        mc:Ignorable="d"
+        Title="Замовлення" Height="350" Width="400" Closing="Window_Closing"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+	<Grid Margin="0,10,10,10" HorizontalAlignment="Right" Width="380">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Label Content="Замовник" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,0,0"/>
+		<Button Content="Додати нового замовника" x:Name="btnAddCustomer" Grid.Row="0" Grid.Column="2" Margin="0,5,0,0"/>
+		<ComboBox  x:Name="cbCustomers" Grid.Row="0" Grid.Column="1" Margin="0,5,0,0"/>
+		<Label Content="Виконавець" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,0,0"/>
+		<Button Content="Додати нового виконавця" x:Name="btnAddExecutor" Grid.Row="1" Grid.Column="2" Margin="0,5,0,0"/>
+		<ComboBox  x:Name="cbExecutors" Grid.Row="1" Grid.Column="1" Margin="0,5,0,0"/>
+
+		<Label Content="Дата народження:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,0,0"/>
+		<DatePicker x:Name="dpDate" Grid.Row="2" Grid.Column="1" Margin="0,5,0,0"/>
+
+		<Label Content="Послуга:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,0,0"/>
+		<ComboBox x:Name="cbService" Grid.Row="3" Grid.Column="1" Margin="0,5,0,0" SelectionChanged="cbService_SelectionChanged"/>
+
+		<Label Content="Вартість:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,0,0"/>
+		<TextBox x:Name="txtCost" Grid.Row="4" Grid.Column="1" Margin="0,5,0,0"/>
+
+		<Label Content="Адреса:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,0,0"/>
+		<TextBox x:Name="txtAddress" Grid.Row="5" Grid.Column="1" Margin="0,5,0,0"/>
+		
+		<StackPanel Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,10,0,0">
+			<Button Content="Зберегти і закрити" Width="120" Margin="0,0,5,0" Click="BtnSave_Click"/>
+			<Button Content="Скасувати і закрити" Width="120" Click="BtnCancel_Click"/>
+		</StackPanel>
+	</Grid>
+</Window>
