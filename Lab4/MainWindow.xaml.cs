@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Lab4;
+
 namespace Lab4
 {
     /// <summary>
@@ -33,14 +23,27 @@ namespace Lab4
 
         private void LoadData()
         {
-           
+            var settings = new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            };
+            if(!File.Exists(FilePath))
+            {
+                _bureaus = new();
+                return;
+            }
+            string json = File.ReadAllText(FilePath);
+            _bureaus = JsonConvert.DeserializeObject<List<ServiceBureau>>(json, settings) ?? new List<ServiceBureau>();
         }
 
         private void SaveData()
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            var dtoList = _bureaus.Select(c => c.ToDTO()).ToList();
-            string json = JsonSerializer.Serialize(dtoList, options);
+            var settings = new JsonSerializerSettings
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                Formatting = Formatting.Indented
+            };
+            string json = JsonConvert.SerializeObject(_bureaus, settings);
             File.WriteAllText(FilePath, json);
         }
 
@@ -57,17 +60,17 @@ namespace Lab4
         {
             if (lbBureaus.SelectedItem is ServiceBureau selectedBureau)
             {
-                var window = new BureauManagerWindow(selectedBureau.ToDTO());
+                var window = new BureauManagerWindow(selectedBureau); // var window = new BureauManagerWindow(selectedBureau.ToDTO());
                 if (window.ShowDialog() == true)
                 {
-                    var updated = ServiceBureau.FromDTO(window.BureauResult);
+                    var updated = window.BureauResult;// ServiceBureau.FromDTO(window.BureauResult);
+
                     int idx = _bureaus.IndexOf(selectedBureau);
                     _bureaus.RemoveAt(idx);
-                    _bureaus.Insert(idx, updated);
+                    _bureaus.Insert(idx, updated); //_bureaus.Insert(idx, ServiceBureau.FromDTO(updated));
                     lbBureaus.Items.Refresh();
                 }
             }
-            
         }
         private void btnDetailedInfo_Click(object sender, RoutedEventArgs e)
         {
@@ -80,10 +83,23 @@ namespace Lab4
 
         private void lbBureaus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (lbBureaus.SelectedItem is ServiceBureau selectedBureau)
-                btnEditOrder.IsEnabled = true;
-            else
-                btnEditOrder.IsEnabled = false;
+
+            btnEditBureau.IsEnabled = true;
+            btnDeleteBureau.IsEnabled = true;
+            btnDetailedInfo.IsEnabled = true;
+
+        }
+
+        private void btnDeleteBureau_Click(object sender, RoutedEventArgs e)
+        {
+            if(lbBureaus.SelectedItem is ServiceBureau selectedBureau)
+            {
+                if (MessageBox.Show($"Ви впевнені, що хочете видалити бюро \"{selectedBureau.BureauName}\"?", "Підтвердження", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    _bureaus.Remove(selectedBureau);
+                    lbBureaus.Items.Refresh();
+                }
+            }
         }
     }
 }

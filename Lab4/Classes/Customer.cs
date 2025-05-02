@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,30 +7,31 @@ using System.Threading.Tasks;
 
 namespace Lab4
 {
+    [JsonObject(IsReference = true)]
     public class Customer
     {
-        private ServiceType service;
-        private string address;
+        private ServiceType _service;
+        private string _address;
 
         public Customer(ServiceType service, string address)
         {
             if (string.IsNullOrWhiteSpace(address))
                 throw new ArgumentException("Адреса не може бути порожньою.");
 
-            this.service = service;
-            this.address = address;
+            _service = service;
+            _address = address;
         }
 
-        public ServiceType Service => service;
-        public string Address => address;
+        public ServiceType Service => _service;
+        public string Address => _address;
 
         public override string ToString()
         {
-            return $"Послуга: {service}, Адреса: {address}";
+            return $"Послуга: {_service}, Адреса: {_address}";
         }
         public CustomerDTO ToDTO()
         {
-            return new CustomerDTO(service, address);
+            return new CustomerDTO(_service, _address);
         }
         public static Customer FromDTO(CustomerDTO dto)
         {
@@ -39,6 +41,7 @@ namespace Lab4
             return new Customer(dto.Service, dto.Address);
         }
     }
+    [JsonObject(IsReference = true)]
     public class CustomerDTO
     {
         public ServiceType Service { get; set; }
@@ -46,9 +49,6 @@ namespace Lab4
 
         public CustomerDTO(ServiceType service, string address)
         {
-            //if (string.IsNullOrWhiteSpace(address))
-            //    throw new ArgumentException("Адреса не може бути порожньою.");
-
             Service = service;
             Address = address;
         }

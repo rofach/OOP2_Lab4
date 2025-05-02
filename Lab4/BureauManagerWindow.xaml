@@ -15,16 +15,16 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
-			<Button x:Name="btnSave" Content="Зберегти і закрити" Width="75" Click="btnSave_Click"/>
-			<Button x:Name="btnCancel" Content="Скасувати і закрити" Width="75" Click="btnCancel_Click"/>
+			<Button x:Name="btnSave" Content="Зберегти" Width="75" Click="btnSave_Click"/>
+			<Button x:Name="btnCancel" Content="Скасувати" Width="75" Margin="5,0,0,0" Click="btnCancel_Click"/>
 		</StackPanel>
 		<Label Grid.Row="1" Content="Перелік замовлень" VerticalAlignment="Center"/>
-		<ListBox x:Name="lbOrders" Grid.Row="2" DisplayMemberPath="OrderInfo"/>
+		<ListBox x:Name="lbOrders" Grid.Row="2" DisplayMemberPath="OrderInfo" SelectionChanged="lbOrders_SelectionChanged"/>
 		<StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" Margin="0,10,0,0">
 			<Button x:Name="btnAddOrder" Content="Додати" Width="75" Click="btnAddOrder_Click"/>
-			<Button x:Name="btnDeleteOrder" Content="Додати" Width="75" Click="btnDeleteOrder_Click"/>
+			<Button x:Name="btnDeleteOrder" Content="Видалити" Width="75" Margin="5,0,0,0" Click="btnDeleteOrder_Click" IsEnabled="False"/>
 			<Button x:Name="btnEditOrder" Content="Редагувати" Width="75" Margin="5,0,0,0" Click="btnEditOrder_Click" IsEnabled="False"/>
-			<Button x:Name="btnDetailedInfo" Content="Детальна інофрмація" Width="75" Margin="5,0,0,0" Click="btnDetailedInfo_Click"/>
+			<Button x:Name="btnDetailedInfo" Content="Детальна інофрмація" Width="120" Margin="5,0,0,0" Click="btnDetailedInfo_Click" IsEnabled="False"/>
 		</StackPanel>
 	</Grid>
 </Window>
