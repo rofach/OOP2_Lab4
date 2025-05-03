@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Lab4
 {
@@ -25,37 +26,32 @@ namespace Lab4
         {
             if (lbOrders.SelectedItem is Order selectedOrder)
             {
-                var orderWindow = new OrderWindow(selectedOrder, _bureau.Executors); // new OrderWindow(selectedOrder.ToDTO(), _bureau.Executors.Select(ex => ex.ToDTO()).ToList());
+                var orderWindow = new OrderWindow(selectedOrder, _bureau.Executors);
                 if (orderWindow.ShowDialog() == true)
                 {
-                    var updated = orderWindow.OrderResult;// ServiceBureau.FromDTO(window.BureauResult);
+                    var updated = orderWindow.OrderResult;
                     if (updated != null)
                     {
-
                         int idx = _bureau.Orders.IndexOf(selectedOrder);
                         _bureau.Orders.RemoveAt(idx);
                         _bureau.Orders.Insert(idx, updated);
                         lbOrders.Items.Refresh();
-                        btnEditOrder.IsEnabled = false;
-                        btnDeleteOrder.IsEnabled = false;
-                        btnDetailedInfo.IsEnabled = false;
                     }
-
                 }
             }
         }
 
         private void btnAddOrder_Click(object sender, RoutedEventArgs e)
         {
-            var orderWindow = new OrderWindow(executors: _bureau.Executors); //  new OrderWindow(executors: _bureau.Executors.Select(ex => ex.ToDTO()).ToList());
+            var orderWindow = new OrderWindow(executors: _bureau.Executors);
             if (orderWindow.ShowDialog() == true)
             {
                 var order = orderWindow.OrderResult;
                 
                 if (order != null)
                 {
-                    _bureau.AddOrder(order); //_bureau.AddOrder(Order.FromDTO(order));
-                    _bureau.Executors = orderWindow.ExecutorsList; //  _bureau.Executors = orderWindow.ExecutorsList?.Select(ex => Executor.FromDTO(ex)).ToList() ?? new List<Executor>();
+                    _bureau.AddOrder(order); 
+                    _bureau.Executors = orderWindow.ExecutorsList;
                     lbOrders.Items.Refresh();
                 }
             }
