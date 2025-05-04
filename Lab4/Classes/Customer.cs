@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,22 +10,34 @@ using System.Threading.Tasks;
 namespace Lab4
 {
     [JsonObject(IsReference = true)]
-    public class Customer
+    public class Customer : IDataErrorInfo, INotifyPropertyChanged
     {
         private ServiceType _service;
+        
         private string _address;
 
+        public Customer()
+        {
+            _service = ServiceType.Cleaning;
+            _address = string.Empty;
+        }
         public Customer(ServiceType service, string address)
         {
-            if (string.IsNullOrWhiteSpace(address))
-                throw new ArgumentException("Адреса не може бути порожньою.");
-
             _service = service;
             _address = address;
         }
 
         public ServiceType Service => _service;
-        public string Address => _address;
+        [Required(ErrorMessage = "Адреса обов'язкова")]
+        public string Address
+        {
+            get => _address;
+            set
+            {
+                _address = value;
+                OnPropertyChanged(nameof(Address));
+            }
+        }
 
         public override string ToString()
         {
@@ -40,6 +54,33 @@ namespace Lab4
 
             return new Customer(dto.Service, dto.Address);
         }
+        public string this[string columnName]
+        {
+            get
+            {
+                var prop = GetType().GetProperty(columnName);
+                if (prop == null) return null!;
+                var value = prop.GetValue(this);
+                var context = new ValidationContext(this) { MemberName = columnName };
+                var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+                bool ok = Validator.TryValidateProperty(value, context, results);
+                return ok ? null! : results.First().ErrorMessage!;
+            }
+        }
+
+        public string Error
+        {
+            get
+            {
+                var context = new ValidationContext(this);
+                var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+                Validator.TryValidateObject(this, context, results, true);
+                return string.Join("\n", results.Select(r => r.ErrorMessage));
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
     }
     [JsonObject(IsReference = true)]
     public class CustomerDTO

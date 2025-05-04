@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,17 +21,21 @@ namespace Lab4
     public partial class AddExecutorForm : Window
     {
         private Executor _executor;
+        private const int MinNameLength = 2;
+        private const int MaxNameLength = 30;
+
         public AddExecutorForm(List<Executor> executors)
         {
             InitializeComponent();
+            DataContext = _executor = new(" ", " ", DateTime.Today.AddYears(-18));
         }
         public ExecutorDTO? ExecutorResult => _executor.ToDTO();
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            _executor = new Executor(txtFirstName.Text, txtLastName.Text, dpBirthDate.SelectedDate.Value);
 
             DialogResult = true;
+
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -50,5 +55,8 @@ namespace Lab4
                 }
             }
         }
+
+       
     }
+    
 }

@@ -60,14 +60,14 @@ namespace Lab4
         {
             if (lbBureaus.SelectedItem is ServiceBureau selectedBureau)
             {
-                var window = new BureauManagerWindow(selectedBureau); // var window = new BureauManagerWindow(selectedBureau.ToDTO());
+                var window = new BureauManagerWindow(selectedBureau);
                 if (window.ShowDialog() == true)
                 {
-                    var updated = window.BureauResult;// ServiceBureau.FromDTO(window.BureauResult);
+                    var updated = window.BureauResult;
 
                     int idx = _bureaus.IndexOf(selectedBureau);
                     _bureaus.RemoveAt(idx);
-                    _bureaus.Insert(idx, updated); //_bureaus.Insert(idx, ServiceBureau.FromDTO(updated));
+                    _bureaus.Insert(idx, updated);
                     lbBureaus.Items.Refresh();
                 }
             }

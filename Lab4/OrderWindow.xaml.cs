@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Lab4;
+using System.ComponentModel.DataAnnotations;
 
 namespace Lab4
 {
@@ -22,85 +23,73 @@ namespace Lab4
     /// </summary>
     public partial class OrderWindow : Window
     {
-        private Order? _order;
+        private Order _order;
         private List<Executor>? _executors;
         private bool _cancelled = false;
-
-        public OrderWindow(Order? order = null, List<Executor>? executors = null) // (OrderDTO? order = null, List<ExecutorDTO>? executors = null)
+        public OrderWindow(Order? order = null, List<Executor>? executors = null) 
         {
             InitializeComponent();
-            //cbService.ItemsSource = Enum.GetValues(typeof(ServiceType));
-            
+            _order = order ?? new Order() { Customer = new() };
+            this.DataContext = _order;
             if (executors != null)
                 _executors = executors;
             else
                 _executors = new();
-
+           
             cbExecutors.ItemsSource = executors;
-            //var services = Enum.GetValues(typeof(ServiceType)).Cast<ServiceType>().Select(s => new {Value = s,Description = s.GetDescription()}).ToList();
             var services = Enum.GetValues(typeof(ServiceType)).Cast<ServiceType>().Select(s => new { Value = s, Description = EnumDescription.GetDescription(s) }).ToList();
             cbService.ItemsSource = services;
             cbService.DisplayMemberPath = "Description";
             cbService.SelectedValuePath = "Value";
-            if (order != null)
+            if(order != null)
             {
-                _order = order;
-                dpDate.SelectedDate = _order.OrderDate;
-                cbExecutors.SelectedItem = _executors[_executors.IndexOf(_order.Executor)];
-                cbService.SelectedItem = services.FirstOrDefault(s => s.Value == _order.Customer.Service);
-                cbService.SelectedValue = _order.Customer.Service;
-                txtCost.Text = _order.Cost.ToString();
-                txtAddress.Text = _order.Customer.Address;
-                
-            }
-            else
-            {
-                dpDate.SelectedDate = DateTime.Today;
+                cbExecutors.SelectedItem = order.Executor;
+                cbService.SelectedValue = order.Customer.Service;
+                txtAddress.Text = order.Customer.Address;
+                dpDate.SelectedDate = order.OrderDate;
             }
         }
 
-        public Order? OrderResult => _order ?? null; //public OrderDTO? OrderResult => _order == null ? null : _order.ToDTO();
-        public List<Executor>? ExecutorsList => _executors ?? null; //public List<ExecutorDTO>? ExecutorsList => _executors?.Select(ex=>ex.ToDTO()).ToList();
-        private bool Validate()
-        {
-            return dpDate.SelectedDate != null &&
-                   cbService.SelectedItem != null &&
-                   cbExecutors.SelectedItem != null &&
-                   !string.IsNullOrWhiteSpace(txtAddress.Text) &&
-                   !string.IsNullOrWhiteSpace(txtCost.Text) &&
-                   int.TryParse(txtCost.Text, out int cost) && cost > 0;
-        }
-
+        public Order? OrderResult => _order ?? null;
+        public List<Executor>? ExecutorsList => _executors ?? null; 
+      
         private void SaveData()
         {
-            int num = int.Parse(txtCost.Text);
-            _order = new Order(
-                   (Executor)cbExecutors.SelectedItem,
-                   new Customer((ServiceType)cbService.SelectedValue, txtAddress.Text),
-                   dpDate.SelectedDate.Value.Date,
-                   num
-               );
+            _order.OrderDate = dpDate.SelectedDate ?? DateTime.Today;
+            _order.Executor = cbExecutors.SelectedItem as Executor;
+            _order.Customer = new Customer((ServiceType)cbService.SelectedValue, txtAddress.Text);
             DialogResult = true;
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (Validate())
+            if (cbExecutors.SelectedItem == null)
             {
-                SaveData();
-                Close();
+                MessageBox.Show("Виберіть виконавця.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-            else
+            if (cbService.SelectedItem == null)
             {
-                MessageBox.Show("Правильно заповніть поля!", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Виберіть послугу.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
+            
+            if (Validation.GetHasError(txtCost) ||
+                Validation.GetHasError(txtAddress) ||
+                Validation.GetHasError(dpDate))
+            {
+                MessageBox.Show("Виправте помилки у формі.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            SaveData();
+            Close();
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             _cancelled = true;
             DialogResult = false;
-            
             Close();
         }
 
@@ -112,13 +101,7 @@ namespace Lab4
                 var res = MessageBox.Show("Зберегти зміни?", "Підтвердження", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                 if (res == MessageBoxResult.Yes)
                 {
-                    if (Validate())
-                    {
-                        SaveData();
-                        e.Cancel = false;
-                    }
-                    else
-                        MessageBox.Show("Заповніть всі поля!", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    e.Cancel = false;                                       
                 }
                 if (res == MessageBoxResult.Cancel) e.Cancel = true;
             }
@@ -126,13 +109,13 @@ namespace Lab4
 
         private void btnAddExecutor_Click(object sender, RoutedEventArgs e)
         {
-            var window = new AddExecutorForm(_executors);//_executors.Select(ex => ex.ToDTO()).ToList());
+            var window = new AddExecutorForm(_executors);
             if(window.ShowDialog() == true)
             {
                 var executor = window.ExecutorResult;
                 if (executor != null)
                 {
-                    _executors.Add(Executor.FromDTO(executor));//(Executor.FromDTO(executor));
+                    _executors.Add(Executor.FromDTO(executor));
                     cbExecutors.Items.Refresh();
                 }
             }
