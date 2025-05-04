@@ -59,7 +59,6 @@
 		<DatePicker x:Name="dpDate" Grid.Row="4" Grid.Column="1" Margin="0,5,0,0"  SelectedDate="{Binding OrderDate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"/>
 
 		<StackPanel Orientation="Horizontal" Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Right" Margin="0,10,0,0">
-		<Button Content="Додати нового виконавця" x:Name="btnAddExecutor" Width="160" Height="40" Margin="0,0,5,0" Click="btnAddExecutor_Click"/>
 		<Button Content="Зберегти" Width="100"  x:Name="btnSave" Height="40" Margin="0,0,5,0" Click="BtnSave_Click"/>
 		<Button Content="Скасувати" Width="100"  x:Name="btnCancel" Height="40" Click="BtnCancel_Click"/>
 			

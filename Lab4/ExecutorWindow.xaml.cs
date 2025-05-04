@@ -24,10 +24,10 @@ namespace Lab4
         private const int MinNameLength = 2;
         private const int MaxNameLength = 30;
 
-        public AddExecutorForm(List<Executor> executors)
+        public AddExecutorForm(Executor? executor = null)
         {
             InitializeComponent();
-            DataContext = _executor = new(" ", " ", DateTime.Today.AddYears(-18));
+            DataContext = _executor = executor ?? new(string.Empty, string.Empty, DateTime.Today.AddYears(-18));
         }
         public ExecutorDTO? ExecutorResult => _executor.ToDTO();
 

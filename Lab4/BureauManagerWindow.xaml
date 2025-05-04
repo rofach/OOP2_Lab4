@@ -17,6 +17,10 @@
 		<StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
 			<Button x:Name="btnSave" Content="Зберегти" Width="75" Click="btnSave_Click"/>
 			<Button x:Name="btnCancel" Content="Скасувати" Width="75" Margin="5,0,0,0" Click="btnCancel_Click"/>
+			<Button x:Name="btnAddExecutor" Content="Додати виконавця" Width="120" Margin="5,0,0,0" Click="btnAddExecutor_Click"/>
+			<Button x:Name="btnDeleteExecutor" Content="Видалити виконавця" Width="120" Margin="5,0,0,0" Click="btnDeleteExecutor_Click" IsEnabled="false"/>
+			<Button x:Name="btnEditExecutor" Content="Редагувати виконавця" Width="150" Margin="5,0,0,0" Click="btnEditExecutor_Click" IsEnabled="false"/>
+			<ComboBox x:Name="cbExecutors" Width="200" Margin="5,0,0,0" DisplayMemberPath="FullName" SelectionChanged="cbExecutors_SelectionChanged"/>
 		</StackPanel>
 		<Label Grid.Row="1" Content="Перелік замовлень" VerticalAlignment="Center"/>
 		<ListBox x:Name="lbOrders" Grid.Row="2" DisplayMemberPath="OrderInfo" SelectionChanged="lbOrders_SelectionChanged"/>

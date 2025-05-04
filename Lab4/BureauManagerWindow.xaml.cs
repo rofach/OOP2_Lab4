@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Lab4
@@ -11,15 +13,16 @@ namespace Lab4
         private ServiceBureau _bureau;
         private List<Executor> _executors;
         private bool _cancelled = false;
-        public BureauManagerWindow(ServiceBureau bureau) //public BureauManagerWindow(ServiceBureauDTO bureau)
+        public BureauManagerWindow(ServiceBureau bureau)
         {
             InitializeComponent();
             _bureau = bureau;
             _executors = _bureau.Executors;
             lbOrders.ItemsSource = _bureau.Orders;
+            cbExecutors.ItemsSource = _executors;
         }
 
-        public ServiceBureau BureauResult => _bureau; // public ServiceBureauDTO BureauResult => _bureau.ToDTO();
+        public ServiceBureau BureauResult => _bureau;
 
 
         private void btnEditOrder_Click(object sender, RoutedEventArgs e)
@@ -110,5 +113,80 @@ namespace Lab4
             btnDeleteOrder.IsEnabled = true;
             btnDetailedInfo.IsEnabled = true;
         }
+
+        private void btnAddExecutor_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AddExecutorForm();
+            if (window.ShowDialog() == true)
+            {
+                var executor = window.ExecutorResult;
+                if (executor != null)
+                {
+                    _executors.Add(Executor.FromDTO(executor));
+                    cbExecutors.Items.Refresh();
+                }
+            }
+        }
+        private void btnEditExecutor_Click(object sender, RoutedEventArgs e)
+        {  
+            if(cbExecutors.SelectedItem is Executor selectedExecutor)
+            {
+                var window = new AddExecutorForm(selectedExecutor);
+                if (window.ShowDialog() == true)
+                {
+                    var updated = window.ExecutorResult;
+                    if (updated != null)
+                    {
+                        int idx = _executors.IndexOf(selectedExecutor);
+                        _executors.RemoveAt(idx);
+                        _executors.Insert(idx, Executor.FromDTO(updated));
+                        foreach (var order in _bureau.Orders)
+                        {
+                            if (order.Executor == selectedExecutor)
+                            {
+                                order.Executor = _executors[idx];
+                            }
+                        }
+                        lbOrders.Items.Refresh();
+                        cbExecutors.Items.Refresh();
+                        btnDeleteExecutor.IsEnabled = false;
+                        btnEditExecutor.IsEnabled = false;
+                    }
+                }
+                
+            }
+
+        }
+        private void btnDeleteExecutor_Click(object sender, RoutedEventArgs e)
+        {
+            if (cbExecutors.SelectedItem is Executor executor)
+            {
+                var res = MessageBox.Show("Ви точно хочете видалити?", "Підтвердження", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if(res == MessageBoxResult.No || res == MessageBoxResult.Cancel) return;
+                _executors.Remove(executor);
+                List<Order> ordersToRemove = new List<Order>();
+                foreach (var order in _bureau.Orders)
+                {
+                    if (order.Executor == executor)
+                    {
+                        ordersToRemove.Add(order);
+                    }
+                }
+                _bureau.Orders.RemoveAll(o => ordersToRemove.Contains(o));
+            }
+            cbExecutors.Items.Refresh();
+            lbOrders.Items.Refresh();
+            btnDeleteExecutor.IsEnabled = false;
+            btnEditExecutor.IsEnabled = false;
+        }
+      
+
+        private void cbExecutors_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            btnEditExecutor.IsEnabled = true;
+            btnDeleteExecutor.IsEnabled = true;
+        }
+
+        
     }
 }

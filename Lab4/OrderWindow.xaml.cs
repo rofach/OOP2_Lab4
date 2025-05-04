@@ -53,7 +53,6 @@ namespace Lab4
       
         private void SaveData()
         {
-            _order.OrderDate = dpDate.SelectedDate ?? DateTime.Today;
             _order.Executor = cbExecutors.SelectedItem as Executor;
             _order.Customer = new Customer((ServiceType)cbService.SelectedValue, txtAddress.Text);
             DialogResult = true;
@@ -104,20 +103,6 @@ namespace Lab4
                 if (res == MessageBoxResult.Cancel) e.Cancel = true;
             }
         }
-
-        private void btnAddExecutor_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new AddExecutorForm(_executors);
-            if(window.ShowDialog() == true)
-            {
-                var executor = window.ExecutorResult;
-                if (executor != null)
-                {
-                    _executors.Add(Executor.FromDTO(executor));
-                    cbExecutors.Items.Refresh();
-                }
-            }
-           
-        }
+              
     }
 }
