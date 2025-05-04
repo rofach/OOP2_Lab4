@@ -16,7 +16,11 @@ namespace Lab4
         
         private string _address;
 
-        public Customer() { }
+        public Customer()
+        {
+            _service = ServiceType.Cleaning;
+            _address = string.Empty;
+        }
         public Customer(ServiceType service, string address)
         {
             _service = service;
@@ -68,16 +72,15 @@ namespace Lab4
         {
             get
             {
-                var ctx = new ValidationContext(this);
+                var context = new ValidationContext(this);
                 var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
-                Validator.TryValidateObject(this, ctx, results, true);
-                return string.Join(Environment.NewLine, results.Select(r => r.ErrorMessage));
+                Validator.TryValidateObject(this, context, results, true);
+                return string.Join("\n", results.Select(r => r.ErrorMessage));
             }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged(string prop)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        private void OnPropertyChanged(string prop) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
     }
     [JsonObject(IsReference = true)]
     public class CustomerDTO

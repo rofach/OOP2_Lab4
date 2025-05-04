@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -9,29 +10,49 @@ using System.Threading.Tasks;
 namespace Lab4
 {
     [JsonObject(IsReference = true)]
-    public class Executor
+    public class Executor : IDataErrorInfo, INotifyPropertyChanged
     {
         private string _firstName;
         private string _lastName;
         private DateTime _birthDate;
 
+        //public Executor() { }
         public Executor(string firstName, string lastName, DateTime birthDate)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
-                throw new ArgumentException("Ім’я не може бути порожнім.");
-            if (string.IsNullOrWhiteSpace(lastName))
-                throw new ArgumentException("Прізвище не може бути порожнім.");
-            if (birthDate > DateTime.Today)
-                throw new ArgumentException("Дата народження не може бути у майбутньому.");
-
             _firstName = firstName;
             _lastName = lastName;
             _birthDate = birthDate;
         }
-
-        public string FirstName => _firstName;
-        public string LastName => _lastName;
-        public DateTime BirthDate => _birthDate;
+        [Required(ErrorMessage = "Ім'я обов'язкове")]
+        public string FirstName
+        {
+            get => _firstName;
+            set
+            {
+                _firstName = value;
+                OnPropertyChanged(nameof(FirstName));
+            }
+        }
+        [Required(ErrorMessage = "Прізвище обов'язкове")]
+        public string LastName
+        {
+            get => _lastName;
+            set
+            {
+                _lastName = value;
+                OnPropertyChanged(nameof(LastName));
+            }
+        }
+        [Required(ErrorMessage = "Дата народження обов'язкова")]
+        public DateTime BirthDate
+        {
+            get => _birthDate;
+            set
+            {
+                _birthDate = value;
+                OnPropertyChanged(nameof(BirthDate));
+            }
+        }
         public string FullName => $"{_firstName} {_lastName}";
         public override string ToString()
         {
@@ -50,6 +71,35 @@ namespace Lab4
             _firstName = firstName;
             _lastName = lastName;
             _birthDate = birthday;
+        }
+        public string this[string columnName]
+        {
+            get
+            {
+                var prop = GetType().GetProperty(columnName);
+                if (prop == null) return null!;
+                var value = prop.GetValue(this);
+                var context = new ValidationContext(this) { MemberName = columnName };
+                var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+                bool isValid = Validator.TryValidateProperty(value, context, results);
+                return isValid ? null! : results.First().ErrorMessage!;
+            }
+        }
+
+        public string Error
+        {
+            get
+            {
+                var context = new ValidationContext(this);
+                var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+                Validator.TryValidateObject(this, context, results, true);
+                return string.Join("\n", results.Select(r => r.ErrorMessage));
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged(string property)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
     }
     [JsonObject(IsReference = true)]

@@ -26,10 +26,10 @@ namespace Lab4
         private Order _order;
         private List<Executor>? _executors;
         private bool _cancelled = false;
-        public OrderWindow(Order? order = null, List<Executor>? executors = null) // (OrderDTO? order = null, List<ExecutorDTO>? executors = null)
+        public OrderWindow(Order? order = null, List<Executor>? executors = null) 
         {
             InitializeComponent();
-            _order = order ?? new Order() { Customer = new()};
+            _order = order ?? new Order() { Customer = new() };
             this.DataContext = _order;
             if (executors != null)
                 _executors = executors;
@@ -63,9 +63,18 @@ namespace Lab4
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (Validation.GetHasError(cbExecutors) ||
-                Validation.GetHasError(cbService) ||
-                Validation.GetHasError(txtCost) ||
+            if (cbExecutors.SelectedItem == null)
+            {
+                MessageBox.Show("Виберіть виконавця.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (cbService.SelectedItem == null)
+            {
+                MessageBox.Show("Виберіть послугу.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
+            if (Validation.GetHasError(txtCost) ||
                 Validation.GetHasError(txtAddress) ||
                 Validation.GetHasError(dpDate))
             {
@@ -100,13 +109,13 @@ namespace Lab4
 
         private void btnAddExecutor_Click(object sender, RoutedEventArgs e)
         {
-            var window = new AddExecutorForm(_executors);//_executors.Select(ex => ex.ToDTO()).ToList());
+            var window = new AddExecutorForm(_executors);
             if(window.ShowDialog() == true)
             {
                 var executor = window.ExecutorResult;
                 if (executor != null)
                 {
-                    _executors.Add(Executor.FromDTO(executor));//(Executor.FromDTO(executor));
+                    _executors.Add(Executor.FromDTO(executor));
                     cbExecutors.Items.Refresh();
                 }
             }

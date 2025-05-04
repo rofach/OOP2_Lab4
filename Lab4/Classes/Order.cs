@@ -25,15 +25,6 @@ namespace Lab4
 
         public Order(Executor executor, Customer customer, DateTime orderDate, int cost)
         {
-            /*if (executor == null)
-                throw new ArgumentNullException(nameof(executor), "Виконавець не може бути null.");
-            if (customer == null)
-                throw new ArgumentNullException(nameof(customer), "Замовник не може бути null.");
-            if (orderDate > DateTime.Today)
-                throw new ArgumentException("Дата замовлення не може бути у майбутньому.");
-            if (cost <= 0)
-                throw new ArgumentException("Вартість повинна бути додатньою.");*/
-
             _executor = executor;
             _customer = customer;
             _orderDate = orderDate.Date;
@@ -95,10 +86,10 @@ namespace Lab4
                 var prop = GetType().GetProperty(columnName);
                 if (prop == null) return null!;
                 var value = prop.GetValue(this);
-                var ctx = new ValidationContext(this) { MemberName = columnName };
+                var context = new ValidationContext(this) { MemberName = columnName };
                 var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
-                bool ok = Validator.TryValidateProperty(value, ctx, results);
-                return ok ? null! : results.First().ErrorMessage!;
+                bool isValid = Validator.TryValidateProperty(value, context, results);
+                return isValid ? null! : results.First().ErrorMessage!;
             }
         }
 
@@ -109,7 +100,7 @@ namespace Lab4
                 var context = new ValidationContext(this);
                 var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
                 Validator.TryValidateObject(this, context, results, true);
-                return string.Join(Environment.NewLine, results.Select(r => r.ErrorMessage));
+                return string.Join("\n", results.Select(r => r.ErrorMessage));
             }
         }
 
