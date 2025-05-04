@@ -47,13 +47,13 @@ namespace Lab4
             }
         }
         [Required(ErrorMessage = "Дата замовлення обов'язкова")]
-        [MaxDate(ErrorMessage = "Дата замовлення не може бути пізніше 31 грудня 2023 року")]
+        [MaxDate(ErrorMessage = "Дата замовлення не може бути у майбутньому")]
         public DateTime OrderDate
         {
             get => _orderDate;
             set { _orderDate = value.Date; OnPropertyChanged(nameof(OrderDate)); }
         }
-        [Required(ErrorMessage = "Адреса обов'язкова")]
+        [Required(ErrorMessage = "Ціна обов'язкова")]
         [Range(0, int.MaxValue, ErrorMessage = "Ціна не в допустимому діапазоні")]
         public int Cost
         {

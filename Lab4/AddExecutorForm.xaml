@@ -7,6 +7,28 @@
         mc:Ignorable="d"
         Title="Замовлення" Height="180" Width="500" Closing="Window_Closing"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+	<Window.Resources>
+		<Style TargetType="TextBox">
+			<Style.Triggers>
+				<Trigger Property="Validation.HasError" Value="True">
+					<Setter Property="ToolTip"
+						Value="{Binding RelativeSource={RelativeSource Self},
+						Path=(Validation.Errors)[0].ErrorContent}" />
+					<Setter Property="Foreground" Value="Red" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+		<Style TargetType="DatePicker">
+			<Style.Triggers>
+				<Trigger Property="Validation.HasError" Value="True">
+					<Setter Property="ToolTip"
+						Value="{Binding RelativeSource={RelativeSource Self},
+						Path=(Validation.Errors)[0].ErrorContent}" />
+					<Setter Property="Foreground" Value="Red" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</Window.Resources>
 	<Grid Margin ="0,0,0,0" HorizontalAlignment="Center">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>

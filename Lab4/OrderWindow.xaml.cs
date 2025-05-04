@@ -45,8 +45,6 @@ namespace Lab4
             {
                 cbExecutors.SelectedItem = order.Executor;
                 cbService.SelectedValue = order.Customer.Service;
-                txtAddress.Text = order.Customer.Address;
-                dpDate.SelectedDate = order.OrderDate;
             }
         }
 

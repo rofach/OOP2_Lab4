@@ -10,7 +10,7 @@ namespace Lab4.Classes.ValidationAttributes
 {
     public class NameValidation : ValidationAttribute
     {
-        private const string _pattern = @"^\p{L}+(?:[ -]\p{L}+)*$";
+        private const string _pattern = @"\p{L}+(?:[ -]\p{L}+)*$";
         private static readonly Regex _regex = new Regex(_pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
         public override bool IsValid(object? value)
         {
