@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Lab4.Classes.ValidationAttributes;
+using Newtonsoft.Json;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -30,13 +31,13 @@ namespace Lab4
             _orderDate = orderDate.Date;
             _cost = cost;
         }
-        [Required(ErrorMessage = "виконавець обов'язкова")]
+        [Required(ErrorMessage = "Виконавець обов'язковий")]
         public Executor Executor
         {
             get => _executor;
             set { _executor = value; OnPropertyChanged(nameof(Executor)); }
         }
-        [Required(ErrorMessage = "замовник обов'язкова")]
+        [Required(ErrorMessage = "Замовник обов'язковий")]
         public Customer Customer
         {
             get => _customer;
@@ -45,14 +46,15 @@ namespace Lab4
                 _customer = value; OnPropertyChanged(nameof(Customer));
             }
         }
-        [Required(ErrorMessage = "Час обов'язкова")]
+        [Required(ErrorMessage = "Дата замовлення обов'язкова")]
+        [MaxDate(ErrorMessage = "Дата замовлення не може бути пізніше 31 грудня 2023 року")]
         public DateTime OrderDate
         {
             get => _orderDate;
             set { _orderDate = value.Date; OnPropertyChanged(nameof(OrderDate)); }
         }
         [Required(ErrorMessage = "Адреса обов'язкова")]
-        [Range(0, 10000, ErrorMessage = "Не в діапазоні")]
+        [Range(0, int.MaxValue, ErrorMessage = "Ціна не в допустимому діапазоні")]
         public int Cost
         {
             get => _cost;
@@ -89,7 +91,7 @@ namespace Lab4
                 var context = new ValidationContext(this) { MemberName = columnName };
                 var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
                 bool isValid = Validator.TryValidateProperty(value, context, results);
-                return isValid ? null! : results.First().ErrorMessage!;
+                return isValid ? string.Empty : results.First().ErrorMessage!;
             }
         }
 

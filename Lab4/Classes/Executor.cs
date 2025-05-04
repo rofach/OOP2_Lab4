@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Lab4.Classes;
+using Lab4.Classes.ValidationAttributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +18,6 @@ namespace Lab4
         private string _lastName;
         private DateTime _birthDate;
 
-        //public Executor() { }
         public Executor(string firstName, string lastName, DateTime birthDate)
         {
             _firstName = firstName;
@@ -24,6 +25,7 @@ namespace Lab4
             _birthDate = birthDate;
         }
         [Required(ErrorMessage = "Ім'я обов'язкове")]
+        [NameValidation(ErrorMessage = "Ім'я може містити лише літери, пробіли та дефіси.")]
         public string FirstName
         {
             get => _firstName;
@@ -34,6 +36,7 @@ namespace Lab4
             }
         }
         [Required(ErrorMessage = "Прізвище обов'язкове")]
+        [NameValidation(ErrorMessage = "Прізвище може містити лише літери, пробіли та дефіси.")]
         public string LastName
         {
             get => _lastName;
@@ -44,6 +47,7 @@ namespace Lab4
             }
         }
         [Required(ErrorMessage = "Дата народження обов'язкова")]
+        [MinimumAge(18, ErrorMessage = "Вік повинен бути не менше 18 років.")]
         public DateTime BirthDate
         {
             get => _birthDate;
@@ -82,7 +86,7 @@ namespace Lab4
                 var context = new ValidationContext(this) { MemberName = columnName };
                 var results = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
                 bool isValid = Validator.TryValidateProperty(value, context, results);
-                return isValid ? null! : results.First().ErrorMessage!;
+                return isValid ? string.Empty : results.First().ErrorMessage!;
             }
         }
 
