@@ -61,11 +61,16 @@ namespace Lab4
             set { _cost = value; OnPropertyChanged(nameof(Cost)); }
         }
 
-        public string OrderInfo => $"{_executor} {_orderDate.ToShortDateString()}";
+        public string OrderInfo => $"Дата: {_orderDate.ToShortDateString()}; адреса: {_customer.Address}; виконавець: {_executor} ";
 
         public override string ToString()
         {
             return $"Замовлення від {_orderDate.ToShortDateString()}:\nВиконавець: {_executor}\nЗамовник: {_customer}\nВартість: {_cost}";
+        }
+        public Order Clone()
+        {
+            return new Order(_executor, _customer.Clone(), _orderDate, _cost);
+          
         }
         public OrderDTO ToDTO()
         {
@@ -112,7 +117,6 @@ namespace Lab4
     }
 
 
-    [JsonObject(IsReference = true)]
     public class OrderDTO
     {
         public ExecutorDTO Executor { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,38 +22,59 @@ namespace Lab4
     public partial class AddExecutorForm : Window
     {
         private Executor _executor;
-        private const int MinNameLength = 2;
-        private const int MaxNameLength = 30;
-
+        bool _cancelled = false;
         public AddExecutorForm(Executor? executor = null)
         {
             InitializeComponent();
             DataContext = _executor = executor ?? new(string.Empty, string.Empty, DateTime.Today.AddYears(-18));
         }
-        public ExecutorDTO? ExecutorResult => _executor.ToDTO();
+        public Executor ExecutorResult => _executor;
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-
-            DialogResult = true;
-
+            if(CheckValidation())
+            {
+                DialogResult = true;
+            }
+            else
+            {
+                MessageBox.Show("Введені дані не валідні", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
+            _cancelled = true;
             DialogResult = false;
-            Close();
         }
-
+        private bool CheckValidation()
+        {
+            return Validation.GetHasError(txtFirstName) == false &&
+                   Validation.GetHasError(txtLastName) == false &&
+                   Validation.GetHasError(dpBirthDate) == false;
+        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            
             if (DialogResult != true)
             {
-                if (MessageBox.Show("Ви впевнені, що хочете закрити вікно?", "Закриття вікна", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                var res = MessageBox.Show("Зберегти?", "Підтвердження", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if (res == MessageBoxResult.Yes)
                 {
-                    e.Cancel = true;
+                    if(CheckValidation())
+                    {
+                        DialogResult = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Введені дані не валідні", "Помилка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        e.Cancel = true;
+                    }
+                    e.Cancel = false;
                 }
+                else if (res == MessageBoxResult.No) e.Cancel = false;
+                else if (res == MessageBoxResult.Cancel) e.Cancel = true;
+
             }
         }
 

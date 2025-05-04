@@ -26,8 +26,17 @@ namespace Lab4
             _service = service;
             _address = address;
         }
+        [Required(ErrorMessage = "Адреса обов'язкова")]
+        public ServiceType Service
+        {
+            get => _service;
+            set
+            {
+                _service = value;
+                OnPropertyChanged(nameof(Service));
+            }
+        }
 
-        public ServiceType Service => _service;
         [Required(ErrorMessage = "Адреса обов'язкова")]
         public string Address
         {
@@ -42,6 +51,11 @@ namespace Lab4
         public override string ToString()
         {
             return $"Послуга: {_service}, Адреса: {_address}";
+        }
+
+        public Customer Clone()
+        {
+            return new Customer(_service, _address);
         }
         public CustomerDTO ToDTO()
         {

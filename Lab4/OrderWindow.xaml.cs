@@ -29,7 +29,7 @@ namespace Lab4
         public OrderWindow(Order? order = null, List<Executor>? executors = null) 
         {
             InitializeComponent();
-            _order = order ?? new Order() { Customer = new() };
+            _order = order == null ? new Order() { Customer = new()} : order.Clone();
             this.DataContext = _order;
             if (executors != null)
                 _executors = executors;
@@ -60,27 +60,32 @@ namespace Lab4
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
+            if (CheckValidation())
+            {
+                SaveData();
+                Close();
+            }
+        }
+        private bool CheckValidation()
+        {
             if (cbExecutors.SelectedItem == null)
             {
                 MessageBox.Show("Виберіть виконавця.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
             if (cbService.SelectedItem == null)
             {
                 MessageBox.Show("Виберіть послугу.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
-            
             if (Validation.GetHasError(txtCost) ||
                 Validation.GetHasError(txtAddress) ||
                 Validation.GetHasError(dpDate))
             {
-                MessageBox.Show("Виправте помилки у формі.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                MessageBox.Show("Виправте помилки у формах.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
-
-            SaveData();
-            Close();
+            return true;
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
@@ -96,11 +101,27 @@ namespace Lab4
             else if (DialogResult != true)
             {
                 var res = MessageBox.Show("Зберегти зміни?", "Підтвердження", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if (res == MessageBoxResult.No)
+                {
+                    DialogResult = false;
+                    e.Cancel = false;
+                    
+                }
                 if (res == MessageBoxResult.Yes)
                 {
-                    e.Cancel = false;                                       
+                    if(CheckValidation())
+                    {
+                        DialogResult = true;
+                        e.Cancel = false;
+                    
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                    }
                 }
-                if (res == MessageBoxResult.Cancel) e.Cancel = true;
+                //else e.Cancel = true;
+
             }
         }
               

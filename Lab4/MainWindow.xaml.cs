@@ -64,11 +64,12 @@ namespace Lab4
                 if (window.ShowDialog() == true)
                 {
                     var updated = window.BureauResult;
-
-                    int idx = _bureaus.IndexOf(selectedBureau);
+                    selectedBureau = updated;
+                    lbBureaus.Items.Refresh();
+                    /*int idx = _bureaus.IndexOf(selectedBureau);
                     _bureaus.RemoveAt(idx);
                     _bureaus.Insert(idx, updated);
-                    lbBureaus.Items.Refresh();
+                    lbBureaus.Items.Refresh();*/
                 }
             }
         }
@@ -87,7 +88,6 @@ namespace Lab4
             btnEditBureau.IsEnabled = true;
             btnDeleteBureau.IsEnabled = true;
             btnDetailedInfo.IsEnabled = true;
-
         }
 
         private void btnDeleteBureau_Click(object sender, RoutedEventArgs e)

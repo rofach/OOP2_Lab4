@@ -25,9 +25,17 @@ namespace Lab4
             _executors = new List<Executor>();
         }
 
-        public string BureauName => _bureauName;
+        public string BureauName
+        {
+            get => _bureauName;
+            private set => _bureauName = value;
+        }
         public string ShortString => ToShortString();
-        public List<Order> Orders => _orders;
+        public List<Order> Orders
+        {
+            get => _orders;
+            set => _orders = value;
+        }
         public List<Executor> Executors { 
             get { return _executors; } 
             set { _executors = value; } }
@@ -56,7 +64,16 @@ namespace Lab4
             int totalCost = _orders.Sum(o => o.Cost);
             return $"Бюро: {_bureauName}, Загальна вартість замовлень: {totalCost}";
         }
-        public ServiceBureauDTO ToDTO()
+        public ServiceBureau Clone()
+        {
+            return new ServiceBureau(_bureauName)
+            {
+                Orders = _orders.Select(o => o.Clone()).ToList(),
+                Executors = _executors.ToList()
+
+            };
+        }
+            public ServiceBureauDTO ToDTO()
         {
             List<OrderDTO> orderDTOs = _orders.Select(o => o.ToDTO()).ToList();
             List<ExecutorDTO> executorDTOs = _executors.Select(e => e.ToDTO()).ToList();

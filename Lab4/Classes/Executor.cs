@@ -62,6 +62,11 @@ namespace Lab4
         {
             return $"{_firstName} {_lastName} ({_birthDate.ToShortDateString()})";
         }
+
+        public Executor Clone()
+        {
+            return new Executor(_firstName, _lastName, _birthDate);
+        }
         public ExecutorDTO ToDTO()
         {
             return new ExecutorDTO(_firstName, _lastName, _birthDate);
