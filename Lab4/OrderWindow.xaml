@@ -57,7 +57,7 @@
 			<ComboBox  x:Name="cbExecutors" Grid.Row="0" Grid.Column="1" Margin="0,5,0,0" DisplayMemberPath="FullName" SelectedItem="{Binding Executor, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
 			<Label Content="Послуга:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,0,0"/>
-		<ComboBox x:Name="cbService" Grid.Row="1" Grid.Column="1" Margin="0,5,0,0" SelectedItem="{Binding Customer.Service, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+		<ComboBox x:Name="cbService" Grid.Row="1" Grid.Column="1" Margin="0,5,0,0"/>
 
 		<Label Content="Вартість:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5,0,0"/>
 			<TextBox x:Name="txtCost" Grid.Row="2" Grid.Column="1" Margin="0,5,0,0" Text="{Binding Cost, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>

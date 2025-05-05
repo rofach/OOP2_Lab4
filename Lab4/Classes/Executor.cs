@@ -25,7 +25,8 @@ namespace Lab4
             _birthDate = birthDate;
         }
         [Required(ErrorMessage = "Ім'я обов'язкове")]
-        [RegularExpression(@"\p{L}+(?:[ -]\p{L}+)*", ErrorMessage = "Ім'я може містити лише літери, пробіли та дефіси.")]
+        [RegularExpression(@"\p{L}+([ -]\p{L}+)*", ErrorMessage = "Ім'я може містити лише літери, пробіли та дефіси.")]
+        [Length(1, 30, ErrorMessage = "Ім'я повинно бути від 1 до 30 символів.")]
         public string FirstName
         {
             get => _firstName;
@@ -37,6 +38,7 @@ namespace Lab4
         }
         [Required(ErrorMessage = "Прізвище обов'язкове")]
         [RegularExpression(@"\p{L}+(?:[ -]\p{L}+)*", ErrorMessage = "Прізвище може містити лише літери, пробіли та дефіси.")]
+        [Length(1, 30, ErrorMessage = "Прізвмще повинно бути від 1 до 30 символів.")]
         public string LastName
         {
             get => _lastName;

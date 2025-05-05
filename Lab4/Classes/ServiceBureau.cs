@@ -70,7 +70,6 @@ namespace Lab4
             {
                 Orders = _orders.Select(o => o.Clone()).ToList(),
                 Executors = _executors.ToList()
-
             };
         }
             public ServiceBureauDTO ToDTO()

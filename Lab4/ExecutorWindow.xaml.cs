@@ -56,7 +56,8 @@ namespace Lab4
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (DialogResult != true)
+            if(_cancelled) e.Cancel = false;
+            else if (DialogResult != true)
             {
                 var res = MessageBox.Show("Зберегти?", "Підтвердження", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                 if (res == MessageBoxResult.Yes)

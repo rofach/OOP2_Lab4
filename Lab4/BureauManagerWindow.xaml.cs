@@ -14,8 +14,8 @@ namespace Lab4
         private bool _cancelled = false;
         private ServiceBureau _editingBureau;
         private ServiceBureau _originalBureau;
-        List<int> _changedIndexes = new List<int>();
-        List<Executor> _changedExecutors = new List<Executor>();
+        private List<int> _changedIndexes = new List<int>();
+        private List<Executor> _changedExecutors = new List<Executor>();
         public BureauManagerWindow(ServiceBureau bureau)
         {
             InitializeComponent();
@@ -42,6 +42,7 @@ namespace Lab4
                         int idx = _editingBureau.Orders.IndexOf(selectedOrder);
                         _editingBureau.Orders.RemoveAt(idx);
                         _editingBureau.Orders.Insert(idx, updated);
+                        //selectedOrder = updated;
                         lbOrders.Items.Refresh();
                     }
                 }
@@ -71,7 +72,8 @@ namespace Lab4
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            _originalBureau.Orders = _editingBureau.Orders.Select(o => (Order)o.Clone()).ToList();
+            /*_originalBureau.Orders = _editingBureau.Orders.Select(o => o.Clone()).ToList();
+            _originalBureau.Executors.Clear();
             foreach(var order in _originalBureau.Orders)
             {
                 if(!_originalBureau.Executors.Contains(order.Executor))
@@ -81,7 +83,9 @@ namespace Lab4
             {
                 if (!_originalBureau.Executors.Contains(executor))
                     _originalBureau.Executors.Add(executor);
-            }
+            }*/
+            //_originalBureau.Executors = _editingBureau.Executors.ToList();
+            //_originalBureau.Orders = _editingBureau.Orders.ToList();
             DialogResult = true;
         }
 
@@ -156,9 +160,7 @@ namespace Lab4
                     var updated = window.ExecutorResult;
                     if (updated != null)
                     {
-                        
-                        _editingBureau.Executors.RemoveAt(idx);
-                        _editingBureau.Executors.Insert(idx, updated);
+                        selectedExecutor = updated;
                         foreach (var order in _editingBureau.Orders)
                         {
                             if (order.Executor == selectedExecutor)
@@ -167,12 +169,12 @@ namespace Lab4
                             }
                         }
                         _changedIndexes.Add(idx);
-                        selectedExecutor = updated;
-
+                        cbExecutors.SelectedItem = null;
                         lbOrders.Items.Refresh();
                         cbExecutors.Items.Refresh();
-                        btnDeleteExecutor.IsEnabled = false;
-                        btnEditExecutor.IsEnabled = false;
+                        cbExecutors.SelectedItem = updated;
+                        //btnDeleteExecutor.IsEnabled = false;
+                        //btnEditExecutor.IsEnabled = false;
                     }
                 }
             }
