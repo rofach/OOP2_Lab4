@@ -65,7 +65,7 @@ namespace Lab4
 
         public override string ToString()
         {
-            return $"Замовлення від {_orderDate.ToShortDateString()}:\nВиконавець: {_executor}\nЗамовник: {_customer}\nВартість: {_cost}";
+            return $"Замовлення від {_orderDate.ToShortDateString()}:\nВиконавець: {_executor}\n{_customer}\nВартість: {_cost}";
         }
         public Order Clone()
         {

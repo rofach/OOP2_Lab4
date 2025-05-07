@@ -50,7 +50,8 @@ namespace Lab4
 
         public override string ToString()
         {
-            return $"Послуга: {_service}, Адреса: {_address}";
+            string serviceName = EnumDescription.GetDescription(_service);
+            return $"Послуга: {serviceName}, Адреса: {_address}";
         }
 
         public Customer Clone()

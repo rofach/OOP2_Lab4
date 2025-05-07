@@ -72,20 +72,6 @@ namespace Lab4
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            /*_originalBureau.Orders = _editingBureau.Orders.Select(o => o.Clone()).ToList();
-            _originalBureau.Executors.Clear();
-            foreach(var order in _originalBureau.Orders)
-            {
-                if(!_originalBureau.Executors.Contains(order.Executor))
-                    _originalBureau.Executors.Add(order.Executor);
-            }
-            foreach(var executor in _editingBureau.Executors)
-            {
-                if (!_originalBureau.Executors.Contains(executor))
-                    _originalBureau.Executors.Add(executor);
-            }*/
-            //_originalBureau.Executors = _editingBureau.Executors.ToList();
-            //_originalBureau.Orders = _editingBureau.Orders.ToList();
             DialogResult = true;
         }
 
